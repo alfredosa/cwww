@@ -352,20 +352,47 @@ Into gamedev at the moment.
         <h1>Alfie</h1>
       </a>
       <nav>
-        <p><a href="/">Home</a> <a href="/blog">Blog</a> <a href="/projects">Projects</a></p>
+        <p>
+          <a href="/">Home</a> <a href="/blog">Blog</a>
+          <a href="/projects">Projects</a>
+        </p>
       </nav>
     </header>
     <main>
-      <div class="about-me">
-        <img src="/static/image/alfie.jpeg" alt="Alfie" />
-        <div>
-          <p>
-            I have a dog, and I write code. Usually hating OOP and unnecessary
-            complexity.
-          </p>
-          <p>Into gamedev at the moment.</p>
+      <!-- New section for cards -->
+      <div class="projects-section">
+        <h2>Projects</h2>
+        <div class="card-container">
+          <div class="card">
+            <a href="https://crates.io/crates/bashtastic-visualizer">
+              <img
+                src="https://m.media-amazon.com/images/I/81iDt6AKy5L._AC_UF1000,1000_QL80_.jpg"
+                alt="Project 1"
+                style="width: 100%"
+              />
+              <div class="container">
+                <h4><b>Terminal User Interface</b></h4>
+                <p>Rust</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="card">
+            <a href="https://github.com/alfredosa/cwww">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjKoumy2i-gbhEXdqwCI1W8gBKSu9-E67stw&s"
+                alt="Project 2"
+                style="width: 100%"
+              />
+              <div class="container">
+                <h4><b>Web Server and Templating lang in pure C</b></h4>
+                <p>Includes implementing HTTP RFC</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- Add more cards as needed -->
         </div>
-      </div>
       </div>
     </main>
     <footer style="padding: 25px 0">

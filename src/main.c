@@ -13,6 +13,7 @@ void blog_handler(HTTPRequest *request, HTTPResponse *response);
 void about_handler(HTTPRequest *request, HTTPResponse *response);
 void submit_handler(HTTPRequest *request, HTTPResponse *response);
 void blog_post(HTTPRequest *request, HTTPResponse *response);
+void projects_handler(HTTPRequest *request, HTTPResponse *response);
 void static_file_handler(HTTPRequest *request, HTTPResponse *response);
 
 int main() {
@@ -24,6 +25,7 @@ int main() {
   add_route(&server, GET, "/", home_handler);
   add_route(&server, GET, "/about", about_handler);
   add_route(&server, GET, "/blog", blog_handler);
+  add_route(&server, GET, "/projects", projects_handler);
   add_route(&server, POST, "/submit", submit_handler);
 
   add_route(&server, GET, "/static/image/alfie.jpeg", static_file_handler);
@@ -52,6 +54,23 @@ int main() {
   destroy_server(&server);
   printf("See You Cowboy....\n");
   return 0;
+}
+
+void projects_handler(HTTPRequest *request, HTTPResponse *response) {
+  char *html_content = read_file("templates/projects.html");
+  if (html_content) {
+    set_response_body(response, html_content, strlen(html_content));
+    add_response_header(response, "Content-Type", "text/html");
+    free(html_content);
+  } else {
+    // Handle error - maybe set a default response or a 500 Internal Server
+    // Error
+    const char *error_msg =
+        "<html><body><h1>Error: Could not load page</h1></body></html>";
+    set_response_body(response, error_msg, strlen(error_msg));
+    response->status_code = 500;
+    strcpy(response->status_message, "Internal Server Error");
+  }
 }
 
 void blog_handler(HTTPRequest *request, HTTPResponse *response) {
