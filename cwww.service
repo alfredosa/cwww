@@ -1,0 +1,12 @@
+[Unit]
+Description=Custom Web Server
+After=network.target
+
+[Service]
+ExecStart=/root/cwww/build/c-http-bloggaru
+Restart=always
+User=root
+WorkingDirectory=/root/cwww/build
+
+[Install]
+WantedBy=multi-user.target
