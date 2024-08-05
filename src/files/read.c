@@ -1,9 +1,4 @@
 #include "read.h"
-#include <dirent.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
 
 char *read_file(const char *filename) {
   FILE *file = fopen(filename, "r");
@@ -105,4 +100,35 @@ char **read_all_files(const char *path, int *file_count) {
   closedir(dir);
 
   return file_list;
+}
+
+char* read_image(const char* file_path, size_t* size) {
+    FILE* file = fopen(file_path, "rb");
+    if (!file) {
+        return NULL;
+    }
+
+    struct stat st;
+    if (stat(file_path, &st) != 0) {
+        fclose(file);
+        return NULL;
+    }
+
+    *size = st.st_size;
+
+    char* buffer = (char*)malloc(*size);
+    if (!buffer) {
+        fclose(file);
+        return NULL;
+    }
+
+    size_t bytes_read = fread(buffer, 1, *size, file);
+    fclose(file);
+
+    if (bytes_read != *size) {
+        free(buffer);
+        return NULL;
+    }
+
+    return buffer;
 }

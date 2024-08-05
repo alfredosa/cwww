@@ -1,288 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
-<title>Alfie</title>
-<link rel="canonical" href="https://blog.alfie.news">
-<meta name="robots" content="noindex, nofollow">
-<meta name="alfie" content="look-for-the-bear-necessities">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5"
+    />
+    <title>Alfie</title>
+    <link rel="canonical" href="https://blog.alfie.news" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="alfie" content="look-for-the-bear-necessities" />
 
-<meta name="title" content="Alfie">
-<meta name="description" content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
-
-
-Into gamedev at the moment.
-...">
-
-<meta property="og:site_name" content="Alfie">
-<meta property="og:title" content="Alfie">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://blog.alfie.news">
-<meta property="og:description" content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
-
-
-Into gamedev at the moment.
-...">
-<meta property="og:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
-
-<meta property="twitter:card" content="summary">
-<meta property="twitter:url" content="https://blog.alfie.news">
-<meta property="twitter:title" content="Alfie">
-<meta property="twitter:description" content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
-
-
-Into gamedev at the moment.
-...">
-<meta property="twitter:image" content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png">
-
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org",
-    "@type": "website",
-    "name": "Alfie",
-    "url": "https://blog.alfie.news",
-    "description": "I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
-
-
-Into gamedev at the moment.
-...",
-    "about": {
-      "@type": "Alfie",
-      "description": "I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
+    <meta name="title" content="Alfie" />
+    <meta
+      name="description"
+      content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
 
 
 Into gamedev at the moment.
 ..."
-    }
-  }
-</script>
-<link rel="alternate" type="application/atom+xml" href="/feed/">
-<link rel="alternate" type="application/rss+xml" href="/feed/?type=rss">
-<link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E🐼%3C/text%3E%3C/svg%3E">
-<style>
-      
-      
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+    />
 
-:root {
-    --width: 720px;
-    --font-main: 'Fira Code', monospace;
-    --font-secondary: 'Fira Code', monospace;
-    --font-scale: 1em;
-    --background-color: #222129;
-    --heading-color: #FFA86A;
-    --text-color: #FFA86A;
-    --link-color: #FFA86A;
-    --visited-color: #bc8d6b;
-    --code-background-color: #bc8d6b;
-    --code-color: #222129;
-    --blockquote-color: #222;
-}
-
-body {
-    font-family: var(--font-secondary);
-    font-size: var(--font-scale);
-    margin: auto;
-    padding: 20px;
-    max-width: var(--width);
-    text-align: left;
-    background-color: var(--background-color);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: var(--text-color);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: var(--font-main);
-    color: var(--heading-color);
-}
-
-a {
-    color: var(--link-color);
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-main {
-    margin-top: 40px;
-    margin-bottom: 20px;
-    padding: 30px;
-    border: 1px solid var(--link-color);
-}
-
-nav a {
-    margin-right: 8px;
-}
-
-strong,
-b {
-    color: var(--heading-color);
-}
-
-button {
-    margin: 0;
-    cursor: pointer;
-}
-
-main {
-    line-height: 1.6;
-}
-
-table {
-    width: 100%;
-}
-
-hr {
-    border: 0;
-    border-top: 1px dashed;
-}
-
-img {
-    max-width: 100%;
-}
-
-code {
-    font-family: monospace;
-    padding: 2px;
-    background-color: var(--code-background-color);
-    color: var(--code-color);
-    border-radius: 3px;
-}
-
-blockquote {
-    border-top: 1px solid var(--heading-color);
-    border-bottom: 1px solid var(--heading-color);
-    color: var(--text-color);
-    padding: 20px;
-    font-style: italic;
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-footer {
-    padding: 25px 0;
-    text-align: center;
-    opacity: 0.6;
-}
-
-.title:hover {
-    text-decoration: none;
-}
-
-.title h1 {
-    font-size: 1em;
-    padding: 5px 10px;
-    background: var(--heading-color);
-    color: var(--background-color);
-    display: inline-block;
-    font-weight: 400;
-}
-
-.inline {
-    width: auto !important;
-}
-
-.highlight,
-.code {
-    padding: 1px 15px;
-    background-color: var(--code-background-color);
-    color: var(--code-color);
-    border-radius: 3px;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    overflow-x: auto;
-}
+    <meta property="og:site_name" content="Alfie" />
+    <meta property="og:title" content="Alfie" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://blog.alfie.news" />
+    <meta
+      property="og:description"
+      content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
 
 
-.highlight {
-    border-left: 5px solid var(--heading-color);
-}
+Into gamedev at the moment.
+..."
+    />
+    <meta
+      property="og:image"
+      content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png"
+    />
 
-/* blog post list */
-ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
-}
-
-ul.blog-posts li {
-    display: flex;
-    margin-bottom: 20px;
-}
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:url" content="https://blog.alfie.news" />
+    <meta property="twitter:title" content="Alfie" />
+    <meta
+      property="twitter:description"
+      content="I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
 
 
+Into gamedev at the moment.
+..."
+    />
+    <meta
+      property="twitter:image"
+      content="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png"
+    />
 
-ul.blog-posts li time {
-    font-style: normal;
-}
+    <script type="application/ld+json">
+        {
+          "@context": "http://schema.org",
+          "@type": "website",
+          "name": "Alfie",
+          "url": "https://blog.alfie.news",
+          "description": "I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
 
-ul.blog-posts li span {
-    flex: 0 0 130px;
-}
 
-ul.blog-posts li a:visited {
-    color: var(--visited-color);
-}
+      Into gamedev at the moment.
+      ...",
+          "about": {
+            "@type": "Alfie",
+            "description": "I have a dog, and I write code. Usually hating on C++ and unnecessary complexity.
 
-table {
-    border-collapse: collapse;
-}
 
-table,
-th,
-td {
-    border: 1px dashed var(--heading-color);
-    padding: 10px;
-}
+      Into gamedev at the moment.
+      ..."
+          }
+        }
+    </script>
+    <link rel="alternate" type="application/atom+xml" href="/feed/" />
+    <link rel="alternate" type="application/rss+xml" href="/feed/?type=rss" />
+    <link
+      rel="shortcut icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E🐼%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap");
 
-@media only screen and (max-width:767px) {
-    main {
+      :root {
+        --width: 720px;
+        --font-main: "Fira Code", monospace;
+        --font-secondary: "Fira Code", monospace;
+        --font-scale: 1em;
+        --background-color: #222129;
+        --heading-color: #ffa86a;
+        --text-color: #ffa86a;
+        --link-color: #ffa86a;
+        --visited-color: #bc8d6b;
+        --code-background-color: #bc8d6b;
+        --code-color: #222129;
+        --blockquote-color: #222;
+      }
+
+      body {
+        font-family: var(--font-secondary);
+        font-size: var(--font-scale);
+        margin: auto;
         padding: 20px;
-        margin-top: 30px;
-        margin-bottom: 10px;
-    }
+        max-width: var(--width);
+        text-align: left;
+        background-color: var(--background-color);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.5;
+        color: var(--text-color);
+      }
 
-    ul.blog-posts li {
-        flex-direction: column;
-    }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: var(--font-main);
+        color: var(--heading-color);
+      }
 
-    ul.blog-posts li span {
-        flex: unset;
-    }
-}
-      
-  </style>
-</head>
-<body class="home">
-<header>
-<a class="title" href="/">
-<h1>
-Alfie
-</h1>
-</a>
-<nav>
-<p><a href="/">Home</a> <a href="/blog">Blog</a></p>
-</nav>
-</header>
-<main>
-<p>I have a dog, and I write code. Usually hating OOP
-and unnecessary complexity.</p>
-<p>Into gamedev at the moment.</p>
-</main>
-<footer style="padding:25px 0;">
-<span>
-This blog is written from scratch in C, using server side rendering and my own templating language :) Even the http server is written in C from scratch. Inspired by: <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
-</span>
-</footer>
-</body>
+      a {
+        color: var(--link-color);
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      main {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding: 30px;
+        border: 1px solid var(--link-color);
+      }
+
+      nav a {
+        margin-right: 8px;
+      }
+
+      strong,
+      b {
+        color: var(--heading-color);
+      }
+
+      button {
+        margin: 0;
+        cursor: pointer;
+      }
+
+      main {
+        line-height: 1.6;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px dashed;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      code {
+        font-family: monospace;
+        padding: 2px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+      }
+
+      blockquote {
+        border-top: 1px solid var(--heading-color);
+        border-bottom: 1px solid var(--heading-color);
+        color: var(--text-color);
+        padding: 20px;
+        font-style: italic;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+
+      footer {
+        padding: 25px 0;
+        text-align: center;
+        opacity: 0.6;
+      }
+
+      .title:hover {
+        text-decoration: none;
+      }
+
+      .title h1 {
+        font-size: 1em;
+        padding: 5px 10px;
+        background: var(--heading-color);
+        color: var(--background-color);
+        display: inline-block;
+        font-weight: 400;
+      }
+
+      .inline {
+        width: auto !important;
+      }
+
+      .highlight,
+      .code {
+        padding: 1px 15px;
+        background-color: var(--code-background-color);
+        color: var(--code-color);
+        border-radius: 3px;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        overflow-x: auto;
+      }
+
+      .highlight {
+        border-left: 5px solid var(--heading-color);
+      }
+
+      /* blog post list */
+      ul.blog-posts {
+        list-style-type: none;
+        padding: unset;
+      }
+
+      ul.blog-posts li {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      ul.blog-posts li time {
+        font-style: normal;
+      }
+
+      ul.blog-posts li span {
+        flex: 0 0 130px;
+      }
+
+      ul.blog-posts li a:visited {
+        color: var(--visited-color);
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px dashed var(--heading-color);
+        padding: 10px;
+      }
+
+      @media only screen and (max-width: 767px) {
+        main {
+          padding: 20px;
+          margin-top: 30px;
+          margin-bottom: 10px;
+        }
+
+        ul.blog-posts li {
+          flex-direction: column;
+        }
+
+        ul.blog-posts li span {
+          flex: unset;
+        }
+
+        .about-me {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .about-me img {
+          max-width: 100px;
+          margin-right: 20px;
+        }
+        .info-section {
+          border: 1px dashed var(--heading-color);
+          padding: 10px;
+          margin-bottom: 20px;
+        }
+        .ascii-graph {
+          font-family: monospace;
+          white-space: pre;
+        }
+      }
+    </style>
+  </head>
+  <body class="home">
+    <header>
+      <a class="title" href="/">
+        <h1>Alfie</h1>
+      </a>
+      <nav>
+        <p><a href="/">Home</a> <a href="/blog">Blog</a></p>
+      </nav>
+    </header>
+    <main>
+      <div class="about-me">
+        <img src="/static/image/alfie.jpeg" alt="Alfie" />
+        <div>
+          <p>
+            I have a dog, and I write code. Usually hating OOP and unnecessary
+            complexity.
+          </p>
+          <p>Into gamedev at the moment.</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h2>INFO</h2>
+        <p>
+          Visitors:
+          <span id="visitor-count"
+            ><!-- This will be filled by backend -->41</span
+          >
+        </p>
+        <p>
+          Page Clicks:
+          <span id="click-count">2012</span>
+        </p>
+      </div>
+    </main>
+    <footer style="padding: 25px 0">
+      <span>
+        This blog is written from scratch in C. Inspired by:
+        <a href="https://bearblog.dev">Bear ʕ•ᴥ•ʔ</a>
+      </span>
+    </footer>
+  </body>
 </html>

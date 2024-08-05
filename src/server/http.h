@@ -5,7 +5,7 @@
 
 #define MAX_HEADERS 20
 #define MAX_HEADER_LENGTH 1024
-#define MAX_BODY_SIZE 1048576 // 1MB max body size
+#define MAX_BODY_SIZE 5242880 // 5MB max body size
 #define MAX_HEADER_RESPONSE_LENGTH 256
 //
 typedef enum { GET, POST, PUT, DELETE, UNKNOWN } HTTPMethods;
