@@ -1,14 +1,17 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25)
 project(c-http-bloggaru)
 
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 26)
 
-# Recursively find all .c and .h files in the src directory
+# Find all .c files in the src directory and subdirectories, excluding main.c
 file(GLOB_RECURSE SOURCE_FILES 
-    "${CMAKE_SOURCE_DIR}/src/**/*.c" 
+    "src/*.c"
 )
+list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.c")
+
+# Remove any CMake-generated files
+list(FILTER SOURCE_FILES EXCLUDE REGEX ".*CMakeFiles.*")
 
 # Main executable
 add_executable(${PROJECT_NAME}
