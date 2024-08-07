@@ -1,7 +1,17 @@
 #include "routes.h"
+#include "db.h"
+
+sqlite3 *db = NULL;
 
 void setup_routes(HTTPServer *server) {
-      // Add routes
+  // TODO: we need middlewares :D
+
+  // INIT DB HERE:
+  init_db();
+  create_tables();
+  // is this legal?
+
+  // Add routes
   add_route(server, GET, "/", home_handler);
   add_route(server, GET, "/about", about_handler);
   add_route(server, GET, "/blog", blog_handler);
@@ -10,7 +20,7 @@ void setup_routes(HTTPServer *server) {
 
   add_route(server, GET, "/static/image/alfie.jpeg", static_file_handler);
 
-    const char *path = "static/posts";
+  const char *path = "static/posts";
   int file_count;
   char **files = read_all_files(path, &file_count);
   if (files != NULL) {
@@ -28,7 +38,6 @@ void setup_routes(HTTPServer *server) {
     }
     free(files);
   }
-
 }
 
 void projects_handler(HTTPRequest *request, HTTPResponse *response) {
@@ -149,38 +158,40 @@ void submit_handler(HTTPRequest *request, HTTPResponse *response) {
 }
 
 void static_file_handler(HTTPRequest *request, HTTPResponse *response) {
-    // Extract the file path from the request
-    const char *file_path = request->path + 1;  // Skip the leading '/'
+  // Extract the file path from the request
+  const char *file_path = request->path + 1; // Skip the leading '/'
 
-    // Read the file content
-    size_t file_size;
-    char *file_content = read_image(file_path, &file_size);
-    if (file_content) {
-        // Set the response body
-        set_response_body(response, file_content, file_size);
+  // Read the file content
+  size_t file_size;
+  char *file_content = read_image(file_path, &file_size);
+  if (file_content) {
+    // Set the response body
+    set_response_body(response, file_content, file_size);
 
-        // Set the Content-Type header based on the file extension
-        const char *extension = strrchr(file_path, '.');
-        if (extension) {
-            if (strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0) {
-                add_response_header(response, "Content-Type", "image/jpeg");
-            } else if (strcmp(extension, ".png") == 0) {
-                add_response_header(response, "Content-Type", "image/png");
-            } else if (strcmp(extension, ".css") == 0) {
-                add_response_header(response, "Content-Type", "text/css");
-            } else if (strcmp(extension, ".js") == 0) {
-                add_response_header(response, "Content-Type", "application/javascript");
-            } else {
-                add_response_header(response, "Content-Type", "application/octet-stream");
-            }
-        }
-
-        free(file_content);
-    } else {
-        // File not found
-        const char *error_msg = "<html><body><h1>Error: File not found</h1></body></html>";
-        set_response_body(response, error_msg, strlen(error_msg));
-        response->status_code = 404;
-        strcpy(response->status_message, "Not Found");
+    // Set the Content-Type header based on the file extension
+    const char *extension = strrchr(file_path, '.');
+    if (extension) {
+      if (strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0) {
+        add_response_header(response, "Content-Type", "image/jpeg");
+      } else if (strcmp(extension, ".png") == 0) {
+        add_response_header(response, "Content-Type", "image/png");
+      } else if (strcmp(extension, ".css") == 0) {
+        add_response_header(response, "Content-Type", "text/css");
+      } else if (strcmp(extension, ".js") == 0) {
+        add_response_header(response, "Content-Type", "application/javascript");
+      } else {
+        add_response_header(response, "Content-Type",
+                            "application/octet-stream");
+      }
     }
+
+    free(file_content);
+  } else {
+    // File not found
+    const char *error_msg =
+        "<html><body><h1>Error: File not found</h1></body></html>";
+    set_response_body(response, error_msg, strlen(error_msg));
+    response->status_code = 404;
+    strcpy(response->status_message, "Not Found");
+  }
 }

@@ -4,6 +4,7 @@
     "routes.h": "c",
     "read.h": "c",
     "server.h": "c",
-    "http.h": "c"
+    "http.h": "c",
+    "md2html.h": "c"
   }
 }

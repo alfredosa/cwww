@@ -6,6 +6,7 @@
 
 #define MAX_HOST_LENGTH 256
 #define MAX_ROUTES 100
+#define MAX_MIDDLEWARES 10
 
 typedef struct {
   int socket_fd;
