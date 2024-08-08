@@ -1,6 +1,7 @@
 #ifndef HTTP_H
 
 #define HTTP_H
+#include <arpa/inet.h>
 #include <stddef.h>
 
 #define MAX_HEADERS 20
@@ -17,6 +18,7 @@ typedef struct {
   char headers[MAX_HEADERS][MAX_HEADER_LENGTH];
   HTTPMethods http_method;
   int header_count;
+  char client_ip[INET6_ADDRSTRLEN];
 } HTTPRequest;
 
 typedef struct {
@@ -36,6 +38,10 @@ typedef struct {
   char path[1024];
   RouteHandler handler;
 } HTTPRoute;
+
+typedef struct {
+  RouteHandler handler;
+} HTTPMiddleware;
 
 // REQUEST DEFS
 void parse_request_line(char *line, HTTPRequest *request);

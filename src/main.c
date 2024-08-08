@@ -5,10 +5,12 @@ int main() {
 
   HTTPServer server = init_server("localhost", 8080);
   setup_routes(&server);
+  setup_middlewares(&server);
 
   run_server(&server);
 
   destroy_server(&server);
+  cleanup_blog_posts();
   printf("See You Cowboy....\n");
   return 0;
 }

@@ -52,7 +52,7 @@ char *str_replace(const char *source, const char *search, const char *replace) {
   return result;
 }
 
-int insert_text(char *text, char *templar_keywork, char *html) {
+int insert_text(const char *text, const char *templar_keywork, char *html) {
   char *search = wrap_with_braces(templar_keywork);
 
   free(search);

@@ -2,14 +2,14 @@
 #include "db.h"
 
 sqlite3 *db = NULL;
+char **blog_posts = NULL;
+int post_count = 0;
 
 void setup_routes(HTTPServer *server) {
   // TODO: we need middlewares :D
 
-  // INIT DB HERE:
   init_db();
   create_tables();
-  // is this legal?
 
   // Add routes
   add_route(server, GET, "/", home_handler);
@@ -19,24 +19,26 @@ void setup_routes(HTTPServer *server) {
   add_route(server, POST, "/submit", submit_handler);
 
   add_route(server, GET, "/static/image/alfie.jpeg", static_file_handler);
+  get_all_blog_posts_and_set_routes(server);
+}
 
+void setup_middlewares(HTTPServer *server) { add_middleware(server, logger); }
+
+void get_all_blog_posts_and_set_routes(HTTPServer *server) {
   const char *path = "static/posts";
-  int file_count;
-  char **files = read_all_files(path, &file_count);
-  if (files != NULL) {
-    for (int i = 0; i < file_count; i++) {
-      printf("%s\n", files[i]);
+  blog_posts = read_all_files(path, &post_count);
+  if (blog_posts != NULL) {
+    for (int i = 0; i < post_count; i++) {
+      printf("%s\n", blog_posts[i]);
       char route[256];
-      snprintf(route, sizeof(route), "/blog/%s", files[i]);
+      snprintf(route, sizeof(route), "/blog/%s", blog_posts[i]);
       // Remove the .md extension if present
       char *dot = strrchr(route, '.');
       if (dot && strcmp(dot, ".md") == 0) {
         *dot = '\0';
       }
       add_route(server, GET, route, blog_post);
-      free(files[i]);
     }
-    free(files);
   }
 }
 
@@ -193,5 +195,15 @@ void static_file_handler(HTTPRequest *request, HTTPResponse *response) {
     set_response_body(response, error_msg, strlen(error_msg));
     response->status_code = 404;
     strcpy(response->status_message, "Not Found");
+  }
+}
+
+void cleanup_blog_posts() {
+  if (blog_posts != NULL) {
+    for (int i = 0; i < post_count; i++) {
+      free(blog_posts[i]);
+    }
+    free(blog_posts);
+    blog_posts = NULL;
   }
 }

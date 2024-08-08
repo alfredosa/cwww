@@ -1,11 +1,11 @@
 #include "server.h"
-#include "http.h"
-#include <arpa/inet.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+
+static volatile bool running = true;
+
+void sigint_handler(int sig) {
+  printf("\nReceived signal %d. Shutting down...\n", sig);
+  running = false;
+}
 
 HTTPServer init_server(const char *host, uint16_t port) {
   HTTPServer server;
@@ -25,6 +25,7 @@ HTTPServer init_server(const char *host, uint16_t port) {
   }
 
   server.route_count = 0;
+  server.middleware_count = 0;
   return server;
 }
 
@@ -65,18 +66,73 @@ int create_and_bind_socket(uint16_t port) {
 }
 
 void run_server(HTTPServer *server) {
-  while (1) {
+  signal(SIGINT, sigint_handler);
+  signal(SIGTERM, sigint_handler);
+
+  // Set socket to non-blocking mode
+  int flags = fcntl(server->socket_fd, F_GETFL, 0);
+  fcntl(server->socket_fd, F_SETFL, flags | O_NONBLOCK);
+
+  while (running) {
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
-
     int client_fd =
         accept(server->socket_fd, (struct sockaddr *)&client_addr, &client_len);
+
     if (client_fd < 0) {
-      perror("accept failed");
-      continue;
+      if (errno == EWOULDBLOCK || errno == EAGAIN) {
+        usleep(1000); // Sleep for 1ms
+        continue;
+      } else if (errno == EINTR) {
+        continue;
+      } else {
+        perror("accept failed");
+        continue;
+      }
     }
 
-    handle_client(client_fd, server);
+    // Set accepted socket back to blocking mode for simplicity
+    flags = fcntl(client_fd, F_GETFL, 0);
+    fcntl(client_fd, F_SETFL, flags & ~O_NONBLOCK);
+
+    if (create_thread_and_handle(client_fd, server) != 0) {
+      continue;
+    }
+  }
+
+  printf("Server shutting down...\n");
+}
+
+int create_thread_and_handle(int client_fd, HTTPServer *server) {
+  ClientHandlerArgs *args = malloc(sizeof(ClientHandlerArgs));
+  if (args == NULL) {
+    perror("Failed to allocate memory for client handler args");
+    close(client_fd);
+    return 1;
+  }
+  args->client_fd = client_fd;
+  args->server = server;
+
+  pthread_t thread_id;
+  if (pthread_create(&thread_id, NULL, client_handler_thread, args) != 0) {
+    perror("Failed to create thread");
+    free(args);
+    close(client_fd);
+    return 1;
+  }
+
+  pthread_detach(thread_id);
+  return 0;
+}
+
+void process_middlewares(HTTPServer *server, HTTPRequest *request,
+                         HTTPResponse *response) {
+  if (!(server->middleware_count > 0)) {
+    return;
+  }
+
+  for (int i = 0; i < server->middleware_count; i++) {
+    server->middlewares[i].handler(request, response);
   }
 }
 
@@ -86,10 +142,10 @@ void handle_client(int client_fd, HTTPServer *server) {
   HTTPResponse *response = create_http_response();
 
   // TODO: Parse request, generate response
-  // TODO: Missing concurrency. Spawn threads, destroy them. Be happy, own
-  // nothing kinda meme.
+  // TODO: Missing concurrency. Spawn threads, destroy
+  // them. Be happy, own nothing kinda meme.
+  process_middlewares(server, request, response);
 
-  log_request(request);
   handle_request(server, request, response);
 
   send_http_response(client_fd, response);
@@ -105,7 +161,8 @@ void destroy_server(HTTPServer *server) {
       close(server->socket_fd);
       server->socket_fd = -1;
     }
-    // TODO: ALFIE: If you've dynamically allocated any memory, free it here
+    // TODO: ALFIE: If you've dynamically allocated
+    // any memory, free it here
   }
 }
 
@@ -129,16 +186,17 @@ void default_404(HTTPResponse *response) {
   response->status_code = 404;
   strcpy(response->status_message, "Not Found");
   add_response_header(response, "Content-Type", "text/html");
-  const char *body =
-      "<html><body><h1>OOOPPS, looks like you wandered to a strange "
-      "place</h1>\n<p>404 Unrecognized Request</p></body></html>";
+  const char *body = "<html><body><h1>OOOPPS, looks like you "
+                     "wandered to a strange "
+                     "place</h1>\n<p>404 Unrecognized "
+                     "Request</p></body></html>";
   set_response_body(response, body, strlen(body));
 }
 
 void log_request(HTTPRequest *request) {
   if (request)
-    printf("INFO: %s, %s, headers #: %i\n", request->method, request->path,
-           request->header_count);
+    printf("INFO: %s, %s, from: %s, headers #: %i\n", request->method,
+           request->path, request->client_ip, request->header_count);
 }
 
 // Function to add a route to the server
@@ -155,6 +213,18 @@ int add_route(HTTPServer *server, HTTPMethods method, const char *path,
   route->handler = handler;
 
   server->route_count++;
+  return 0;
+}
+
+int add_middleware(HTTPServer *server, RouteHandler handler) {
+  if (server->middleware_count >= MAX_MIDDLEWARES) {
+    return -1;
+  }
+
+  HTTPMiddleware *middlware = &server->middlewares[server->middleware_count];
+  middlware->handler = handler;
+
+  server->middleware_count++;
   return 0;
 }
 
@@ -188,4 +258,11 @@ void send_http_response(int client_fd, HTTPResponse *response) {
   if (response->body && response->body_length > 0) {
     write(client_fd, response->body, response->body_length);
   }
+}
+
+void *client_handler_thread(void *arg) {
+  ClientHandlerArgs *args = (ClientHandlerArgs *)arg;
+  handle_client(args->client_fd, args->server);
+  free(args);
+  return NULL;
 }
