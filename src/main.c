@@ -10,7 +10,9 @@ int main() {
   run_server(&server);
 
   destroy_server(&server);
-  cleanup_blog_posts();
+  for (int i = 0; i < post_count; i++) {
+    free_blog_post(&blog_posts[i]);
+  }
   close_db();
   printf("See You Cowboy....\n");
   return 0;

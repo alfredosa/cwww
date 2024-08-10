@@ -11,7 +11,7 @@ char *wrap_with_braces(const char *word) {
     return NULL;
   }
 
-  sprintf(result, "{{%s}}", word);
+  sprintf(result, "{{ %s }}", word);
   return result;
 }
 
@@ -58,4 +58,5 @@ int insert_text(const char *text, const char *templar_keywork, char *html) {
   free(search);
   return 0;
 }
+
 char *get_keywords();

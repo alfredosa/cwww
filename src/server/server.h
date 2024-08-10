@@ -44,7 +44,7 @@ void handle_request(HTTPServer *server, HTTPRequest *request,
                     HTTPResponse *response);
 
 void send_http_response(int client_fd, HTTPResponse *response);
-
+ssize_t send_all(int fd, const void *buffer, size_t length);
 void process_middlewares(HTTPServer *server, HTTPRequest *request,
                          HTTPResponse *response);
 void default_404(HTTPResponse *response);

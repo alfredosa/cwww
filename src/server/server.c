@@ -68,6 +68,7 @@ int create_and_bind_socket(uint16_t port) {
 void run_server(HTTPServer *server) {
   signal(SIGINT, sigint_handler);
   signal(SIGTERM, sigint_handler);
+  signal(SIGPIPE, SIG_IGN);
 
   // Set socket to non-blocking mode
   int flags = fcntl(server->socket_fd, F_GETFL, 0);
@@ -137,19 +138,11 @@ void process_middlewares(HTTPServer *server, HTTPRequest *request,
 }
 
 void handle_client(int client_fd, HTTPServer *server) {
-
   HTTPRequest *request = parse_http_request(client_fd);
   HTTPResponse *response = create_http_response();
-
-  // TODO: Parse request, generate response
-  // TODO: Missing concurrency. Spawn threads, destroy
-  // them. Be happy, own nothing kinda meme.
   process_middlewares(server, request, response);
-
   handle_request(server, request, response);
-
   send_http_response(client_fd, response);
-
   destroy_http_response(response);
   destroy_http_request(request);
   close(client_fd);
@@ -240,23 +233,49 @@ HTTPRoute *find_route(HTTPServer *server, HTTPMethods method,
   return NULL; // No matching route found
 }
 
+ssize_t send_all(int fd, const void *buffer, size_t length) {
+  ssize_t total_sent = 0;
+  const char *buf = (const char *)buffer;
+  while (length > 0) {
+    ssize_t sent = write(fd, buf, length);
+    if (sent < 0) {
+      if (errno == EINTR)
+        continue; // Interrupted, try again
+      perror("write error");
+      return -1;
+    }
+    if (sent == 0)
+      return total_sent; // Connection closed by peer
+    buf += sent;
+    total_sent += sent;
+    length -= sent;
+  }
+  return total_sent;
+}
+
 void send_http_response(int client_fd, HTTPResponse *response) {
   char buffer[1024];
   int len = snprintf(buffer, sizeof(buffer), "HTTP/1.1 %d %s\r\n",
                      response->status_code, response->status_message);
-  write(client_fd, buffer, len);
+  if (send_all(client_fd, buffer, len) < 0)
+    return;
 
   for (int i = 0; i < response->header_count; i++) {
-    write(client_fd, response->headers[i], strlen(response->headers[i]));
-    write(client_fd, "\r\n", 2);
+    if (send_all(client_fd, response->headers[i],
+                 strlen(response->headers[i])) < 0)
+      return;
+    if (send_all(client_fd, "\r\n", 2) < 0)
+      return;
   }
 
   len = snprintf(buffer, sizeof(buffer), "Content-Length: %zu\r\n\r\n",
                  response->body_length);
-  write(client_fd, buffer, len);
+  if (send_all(client_fd, buffer, len) < 0)
+    return;
 
   if (response->body && response->body_length > 0) {
-    write(client_fd, response->body, response->body_length);
+    if (send_all(client_fd, response->body, response->body_length) < 0)
+      return;
   }
 }
 
