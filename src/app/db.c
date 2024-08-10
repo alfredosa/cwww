@@ -28,8 +28,7 @@ int create_tables() {
   char *sql = "CREATE TABLE IF NOT EXISTS page_activity ("
               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
               "page TEXT NOT NULL, "
-              "clicks INTEGER NOT NULL, "
-              "visitors INTEGER NOT NULL"
+              "ip TEXT NOT NULL "
               ")";
 
   int rc = sqlite3_exec(db, sql, NULL, NULL, NULL);

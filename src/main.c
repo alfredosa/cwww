@@ -11,6 +11,7 @@ int main() {
 
   destroy_server(&server);
   cleanup_blog_posts();
+  close_db();
   printf("See You Cowboy....\n");
   return 0;
 }

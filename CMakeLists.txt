@@ -1,6 +1,19 @@
 cmake_minimum_required(VERSION 3.25)
 project(c-http-bloggaru)
 
+# Allow user to specify build type if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Output the build type
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+# Set compile options based on the build type
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -42,14 +55,11 @@ endif()
 file(COPY ${CMAKE_SOURCE_DIR}/templates DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/static DESTINATION ${CMAKE_BINARY_DIR})
 
-#### TESTING SECTION :)
-
-# # Enable testing
-# enable_testing()
-#
-# # Test executable
-# add_executable(RunTests
-#     ${SOURCE_FILES}
-# )
-# target_compile_definitions(RunTests PRIVATE TESTING)
-
+# Add custom target for running with Valgrind (Debug mode only)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_target(run_valgrind
+        COMMAND valgrind --leak-check=full --show-leak-kinds=all $<TARGET_FILE:${PROJECT_NAME}>
+        DEPENDS ${PROJECT_NAME}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+endif()
