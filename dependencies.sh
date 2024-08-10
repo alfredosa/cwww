@@ -57,12 +57,6 @@ if ! pkg-config --modversion md4c; then
     exit 1
 fi
 
-echo "Checking SQLite3 installation:"
-if ! sqlite3 --version; then
-    echo "SQLite3 installation failed"
-    exit 1
-fi
-
 echo "Installation complete!"
 
 # Clean up
