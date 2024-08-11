@@ -84,3 +84,6 @@ if [ -f "tmp/$DB_NAME" ]; then
 fi
 
 log "Build completed successfully"
+
+log "Restarting service cwww.service"
+sudo systemctl restart cwww.service
