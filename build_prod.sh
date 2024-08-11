@@ -29,7 +29,7 @@ git_pull_and_check() {
 }
 
 MAIN_REPO="$(pwd)"
-FIFISV_REPO="/home/${USER}/.config/fifisv"
+FIFISV_REPO="/home/alfie/.config/fifisv"
 SERVICE_NAME="cwww.service"
 BUILD_DIR="build"
 DB_NAME="alfie.db"
