@@ -7,6 +7,7 @@ error() { log "ERROR: $1"; exit 1; }
 # Function to check if git pull updated the repository
 git_pull_and_check() {
     local repo_path="$1"
+    local original_dir=$(pwd)
     cd "$repo_path" || error "Failed to change to directory: $repo_path"
 
     # Fetch updates
@@ -18,23 +19,22 @@ git_pull_and_check() {
     if [ "$changes" -gt 0 ]; then
         log "Updates found for $repo_path"
         git pull || error "Failed to pull updates for $repo_path"
+        cd "$original_dir" || error "Failed to return to original directory"
         return 0
     else
         log "No updates found for $repo_path"
+        cd "$original_dir" || error "Failed to return to original directory"
         return 1
     fi
 }
 
-# Main repository path
 MAIN_REPO="$(pwd)"
-# Second repository path
 FIFISV_REPO="/home/${USER}/.config/fifisv"
-
+SERVICE_NAME="cwww.service"
 BUILD_DIR="build"
 DB_NAME="alfie.db"
 DB="${BUILD_DIR}/${DB_NAME}"
 
-# Check for updates in both repositories
 main_updated=false
 second_updated=false
 
@@ -46,18 +46,13 @@ if git_pull_and_check "$FIFISV_REPO"; then
     second_updated=true
 fi
 
-# If neither repository was updated, exit early
 if ! $main_updated && ! $second_updated; then
     log "No updates found in either repository. Exiting."
     exit 0
 fi
 
-cd $MAIN_REPO
+cd "$MAIN_REPO" || error "Failed to change to main repository directory"
 
-# Cache sudo credentials
-sudo -v || error "Failed to cache sudo credentials"
-
-# Cleanup on exit
 mkdir -p tmp || error "Failed to create tmp directory"
 trap 'rm -rf ./tmp' EXIT
 
@@ -87,5 +82,5 @@ fi
 
 log "Build completed successfully"
 
-log "Restarting service cwww.service"
-sudo systemctl restart cwww.service
+log "Restarting service $SERVICE_NAME"
+systemctl is-active --quiet $SERVICE_NAME && systemctl restart $SERVICE_NAME
