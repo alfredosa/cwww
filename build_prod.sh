@@ -4,6 +4,8 @@ set -e
 log() { echo "$(date): $1"; }
 error() { log "ERROR: $1"; exit 1; }
 
+export GIT_SSH_COMMAND="ssh -i /home/alfie/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
 # Function to check if git pull updated the repository
 git_pull_and_check() {
     local repo_path="$1"
