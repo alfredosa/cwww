@@ -28,12 +28,14 @@ git_pull_and_check() {
     fi
 }
 
-MAIN_REPO="$(pwd)"
+MAIN_REPO="/home/alfie/codehub/cwww"
 FIFISV_REPO="/home/alfie/.config/fifisv"
 SERVICE_NAME="cwww.service"
 BUILD_DIR="build"
 DB_NAME="alfie.db"
 DB="${BUILD_DIR}/${DB_NAME}"
+
+cd "$MAIN_REPO" || error "Failed to change to main repository directory"
 
 main_updated=false
 second_updated=false
