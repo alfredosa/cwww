@@ -52,6 +52,8 @@ if ! $main_updated && ! $second_updated; then
     exit 0
 fi
 
+cd $MAIN_REPO
+
 # Cache sudo credentials
 sudo -v || error "Failed to cache sudo credentials"
 
