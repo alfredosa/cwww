@@ -1,5 +1,9 @@
 # This is my webside :)
 
+> [!WARNING]
+> This project is now officially migrated to https://git.alfie.news/cwww
+> I will likely delete this sometime.
+
 Bare git, pure C, No Javascript
 
 ## Instructions
